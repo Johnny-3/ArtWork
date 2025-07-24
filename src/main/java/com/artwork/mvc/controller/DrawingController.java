@@ -24,18 +24,38 @@ public class DrawingController {
         view.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                lastPoint = e.getPoint();
+                if (model.isEraserMode()) {
+                    model.eraseAt(e.getPoint());
+                    view.setEraserPosition(e.getPoint());
+                    view.repaint();
+                } else {
+                    lastPoint = e.getPoint();
+                }
             }
         });
 
         view.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-                Point newPoint = e.getPoint();
-                Line line = new Line(lastPoint, newPoint, model.getCurrentColor(), model.getStrokeWidth());
-                model.addLine(line);
-                lastPoint = newPoint;
-                view.repaint();
+                if (model.isEraserMode()) {
+                    model.eraseAt(e.getPoint());
+                    view.setEraserPosition(e.getPoint());
+                    view.repaint();
+                } else {
+                    Point newPoint = e.getPoint();
+                    Line line = new Line(lastPoint, newPoint, model.getCurrentColor(), model.getStrokeWidth());
+                    model.addLine(line);
+                    lastPoint = newPoint;
+                    view.repaint();
+                }
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                if (model.isEraserMode()) {
+                    view.setEraserPosition(e.getPoint());
+                    view.repaint();
+                }
             }
         });
     }

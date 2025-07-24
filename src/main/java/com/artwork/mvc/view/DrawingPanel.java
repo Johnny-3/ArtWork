@@ -8,6 +8,7 @@ import java.awt.*;
 
 public class DrawingPanel extends JPanel {
     private final DrawingModel model;
+    private Point eraserPosition;
 
     public DrawingPanel(DrawingModel model) {
         this.model = model;
@@ -26,5 +27,14 @@ public class DrawingPanel extends JPanel {
             Point e = line.getEnd();
             g2.drawLine(s.x, s.y, e.x, e.y);
         }
+        if (model.isEraserMode() && eraserPosition != null) {
+            int r = model.getEraserRadius();
+            g2.setColor(model.isDarkMode() ? Color.WHITE : Color.BLACK);
+            g2.drawOval(eraserPosition.x - r, eraserPosition.y - r, r * 2, r * 2);
+        }
+    }
+
+    public void setEraserPosition(Point p) {
+        this.eraserPosition = p;
     }
 }
