@@ -2,6 +2,7 @@ package com.artwork.mvc.view;
 
 import com.artwork.mvc.model.DrawingModel;
 import com.artwork.mvc.view.DrawingPanel;
+import com.artwork.mvc.view.ColorIcon;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +21,10 @@ public class ControlPanel extends JPanel {
 
         for (int i = 0; i < COLORS.length; i++) {
             Color color = COLORS[i];
-            JButton btn = new JButton();
+            JButton btn = new JButton(new ColorIcon(color, 16));
             btn.setPreferredSize(new Dimension(20, 20));
             btn.setBackground(color);
+            btn.setOpaque(true);
             btn.setBorderPainted(false);
             btn.setFocusPainted(false);
             final int idx = i;
@@ -68,7 +70,8 @@ public class ControlPanel extends JPanel {
     private void updateButtonColors(DrawingModel model) {
         for (int i = 0; i < COLORS.length; i++) {
             Color base = COLORS[i];
-            colorButtons[i].setBackground(model.isDarkMode() ? DrawingModel.complementColor(base) : base);
+            Color toUse = model.isDarkMode() ? DrawingModel.complementColor(base) : base;
+            colorButtons[i].setBackground(toUse);
         }
     }
 }

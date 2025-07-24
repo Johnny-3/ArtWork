@@ -20,7 +20,8 @@ public class MainFrame extends JFrame {
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, controlPanel, drawingPanel);
         splitPane.setResizeWeight(0);
-        splitPane.setDividerLocation(150);
+        // give roughly one third of the width to the control panel
+        splitPane.setDividerLocation(0.33);
 
         getContentPane().setLayout(new BorderLayout());
         add(splitPane, BorderLayout.CENTER);
