@@ -10,10 +10,18 @@ package model {
     -List<Line> lines
     -Color currentColor
     -int strokeWidth
+    -ShapeType currentShapeType
     +addLine(Line)
     +getLines()
     +setCurrentColor(Color)
     +setStrokeWidth(int)
+    +getCurrentShapeType()
+    +setCurrentShapeType(ShapeType)
+  }
+  enum ShapeType {
+    FREEHAND
+    RECTANGLE
+    OVAL
   }
 }
 
@@ -37,6 +45,7 @@ MainFrame --> ReviewPanel
 MainFrame --> DrawingModel
 DrawingPanel --> DrawingModel
 ControlPanel --> DrawingModel
+ControlPanel --> ShapeType
 DrawingController --> DrawingModel
 DrawingController --> DrawingPanel
 @enduml

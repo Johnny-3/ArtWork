@@ -2,7 +2,7 @@
 
 This project is a simple Java Swing application organized using the MVC pattern. It provides:
 
-- A top left control panel with 12 color buttons, an eraser tool and sliders for line thickness and erase radius.
+- A top left control panel with 12 color buttons, shape selection, an eraser tool and sliders for line thickness and erase radius.
 - A top right drawing canvas where you can drag to draw lines with the selected color and thickness or erase with the eraser tool.
 - A bottom panel with a placeholder **Review** button.
 - A dark mode toggle that inverts colors on the canvas.

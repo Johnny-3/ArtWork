@@ -1,6 +1,7 @@
 package com.artwork.mvc.view;
 
 import com.artwork.mvc.model.DrawingModel;
+import com.artwork.mvc.model.ShapeType;
 import com.artwork.mvc.view.DrawingPanel;
 import com.artwork.mvc.view.ColorIcon;
 
@@ -15,8 +16,13 @@ public class ControlPanel extends JPanel {
     };
 
     private final JButton[] colorButtons = new JButton[COLORS.length];
+    private static final ShapeType[] SHAPES = { ShapeType.FREEHAND, ShapeType.RECTANGLE, ShapeType.OVAL };
+    private final JButton[] shapeButtons = new JButton[SHAPES.length];
+
+    private final DrawingModel model;
 
     public ControlPanel(DrawingModel model, DrawingPanel drawingPanel) {
+        this.model = model;
         setLayout(new FlowLayout(FlowLayout.LEFT));
 
         for (int i = 0; i < COLORS.length; i++) {
@@ -31,6 +37,17 @@ public class ControlPanel extends JPanel {
             btn.addActionListener(e -> model.setCurrentColor(colorButtons[idx].getBackground()));
             colorButtons[i] = btn;
             add(btn);
+        }
+
+        // shape selection buttons
+        for (int i = 0; i < SHAPES.length; i++) {
+            ShapeType type = SHAPES[i];
+            JButton sbtn = new JButton(type.name().substring(0, 1));
+            sbtn.setFocusPainted(false);
+            sbtn.putClientProperty("shape", type);
+            sbtn.addActionListener(e -> setCurrentShapeType((ShapeType) ((JButton) e.getSource()).getClientProperty("shape")));
+            shapeButtons[i] = sbtn;
+            add(sbtn);
         }
 
         JButton eraser = new JButton("E");
@@ -65,6 +82,7 @@ public class ControlPanel extends JPanel {
         add(dark);
 
         updateButtonColors(model);
+        updateShapeButtonColors();
     }
 
     private void updateButtonColors(DrawingModel model) {
@@ -72,6 +90,19 @@ public class ControlPanel extends JPanel {
             Color base = COLORS[i];
             Color toUse = model.isDarkMode() ? DrawingModel.complementColor(base) : base;
             colorButtons[i].setBackground(toUse);
+        }
+    }
+
+    private void setCurrentShapeType(ShapeType type) {
+        model.setCurrentShapeType(type);
+        updateShapeButtonColors();
+    }
+
+    private void updateShapeButtonColors() {
+        for (int i = 0; i < SHAPES.length; i++) {
+            ShapeType t = SHAPES[i];
+            JButton btn = shapeButtons[i];
+            btn.setBackground(t == model.getCurrentShapeType() ? Color.LIGHT_GRAY : null);
         }
     }
 }
