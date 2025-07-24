@@ -1,0 +1,42 @@
+@startuml
+package model {
+  class Line {
+    +Point start
+    +Point end
+    +Color color
+    +int strokeWidth
+  }
+  class DrawingModel {
+    -List<Line> lines
+    -Color currentColor
+    -int strokeWidth
+    +addLine(Line)
+    +getLines()
+    +setCurrentColor(Color)
+    +setStrokeWidth(int)
+  }
+}
+
+package view {
+  class MainFrame
+  class ControlPanel
+  class DrawingPanel
+  class ReviewPanel
+}
+
+package controller {
+  class DrawingController
+}
+
+class Main
+
+Main -> MainFrame
+MainFrame --> ControlPanel
+MainFrame --> DrawingPanel
+MainFrame --> ReviewPanel
+MainFrame --> DrawingModel
+DrawingPanel --> DrawingModel
+ControlPanel --> DrawingModel
+DrawingController --> DrawingModel
+DrawingController --> DrawingPanel
+@enduml
