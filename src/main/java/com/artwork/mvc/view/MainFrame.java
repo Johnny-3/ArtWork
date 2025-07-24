@@ -15,15 +15,15 @@ public class MainFrame extends JFrame {
         DrawingPanel drawingPanel = new DrawingPanel(model);
         new DrawingController(model, drawingPanel);
 
-        ControlPanel controlPanel = new ControlPanel(model);
+        ControlPanel controlPanel = new ControlPanel(model, drawingPanel);
         ReviewPanel reviewPanel = new ReviewPanel();
 
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.add(controlPanel, BorderLayout.WEST);
-        topPanel.add(drawingPanel, BorderLayout.CENTER);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, controlPanel, drawingPanel);
+        splitPane.setResizeWeight(0);
+        splitPane.setDividerLocation(150);
 
         getContentPane().setLayout(new BorderLayout());
-        add(topPanel, BorderLayout.CENTER);
+        add(splitPane, BorderLayout.CENTER);
         add(reviewPanel, BorderLayout.SOUTH);
 
         pack();
