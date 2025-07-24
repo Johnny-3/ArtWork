@@ -7,10 +7,19 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import com.artwork.mvc.model.ShapeType;
+
+/**
+ * Model storing the lines and current drawing state.
+ */
+
 public class DrawingModel {
     private final List<Line> lines = new ArrayList<>();
     private Color currentColor = Color.BLACK;
     private int strokeWidth = 2;
+
+    /** Currently selected drawing shape. */
+    private ShapeType currentShapeType = ShapeType.FREEHAND;
 
     private boolean eraserMode = false;
     private int eraserRadius = 10;
@@ -38,6 +47,14 @@ public class DrawingModel {
 
     public void setStrokeWidth(int strokeWidth) {
         this.strokeWidth = strokeWidth;
+    }
+
+    public ShapeType getCurrentShapeType() {
+        return currentShapeType;
+    }
+
+    public void setCurrentShapeType(ShapeType currentShapeType) {
+        this.currentShapeType = currentShapeType;
     }
 
     public void clear() {
