@@ -49,10 +49,18 @@ public class DrawingModel {
         this.strokeWidth = strokeWidth;
     }
 
+    /**
+     * Returns the shape type currently selected in the model.
+     */
     public ShapeType getCurrentShapeType() {
         return currentShapeType;
     }
 
+    /**
+     * Updates which shape type should be used for newly drawn items.
+     *
+     * @param currentShapeType the shape type to use
+     */
     public void setCurrentShapeType(ShapeType currentShapeType) {
         this.currentShapeType = currentShapeType;
     }
