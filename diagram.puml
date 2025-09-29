@@ -1,51 +1,158 @@
 @startuml
-package model {
-  class Line {
-    +Point start
-    +Point end
-    +Color color
-    +int strokeWidth
-  }
-  class DrawingModel {
-    -List<Line> lines
-    -Color currentColor
-    -int strokeWidth
-    -ShapeType currentShapeType
-    +addLine(Line)
-    +getLines()
-    +setCurrentColor(Color)
-    +setStrokeWidth(int)
-    +getCurrentShapeType()
-    +setCurrentShapeType(ShapeType)
-  }
-  enum ShapeType {
-    FREEHAND
-    RECTANGLE
-    OVAL
-  }
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam dpi 160
+title ArtWork – Planned Model UML
+
+' ---------- Interfaces ----------
+interface Renderable {
+  +draw(g: Graphics2D): void
 }
 
-package view {
-  class MainFrame
-  class ControlPanel
-  class DrawingPanel
-  class ReviewPanel
+interface Command {
+  +execute(model: DrawingModel): void
+  +undo(model: DrawingModel): void
+  +getName(): String
 }
 
-package controller {
-  class DrawingController
+' ---------- Abstract base ----------
+abstract class Shape implements Renderable {
+  -color: Color
+  -strokeWidth: int
+  -bounds: Rectangle
+  +draw(g: Graphics2D): void
+  +hitTest(p: Point): boolean
 }
 
-class Main
+' ---------- Concrete shapes (polymorphic) ----------
+class FreehandStroke extends Shape {
+  -segments: List<Line>
+  +addSegment(s: Line): void
+  +draw(g: Graphics2D): void
+  +hitTest(p: Point): boolean
+}
 
-Main -> MainFrame
-MainFrame --> ControlPanel
-MainFrame --> DrawingPanel
-MainFrame --> ReviewPanel
-MainFrame --> DrawingModel
-DrawingPanel --> DrawingModel
-ControlPanel --> DrawingModel
-ControlPanel --> ShapeType
-DrawingController --> DrawingModel
-DrawingController --> DrawingPanel
+class RectangleShape extends Shape {
+  -start: Point
+  -end: Point
+  +draw(g: Graphics2D): void
+  +hitTest(p: Point): boolean
+}
+
+class OvalShape extends Shape {
+  -start: Point
+  -end: Point
+  +draw(g: Graphics2D): void
+  +hitTest(p: Point): boolean
+}
+
+class TriangleShape extends Shape {
+  -p1: Point
+  -p2: Point
+  -p3: Point
+  +draw(g: Graphics2D): void
+  +hitTest(p: Point): boolean
+}
+
+' ---------- Value objects / enums ----------
+class Line {
+  -start: Point
+  -end: Point
+  -color: Color
+  -strokeWidth: int
+}
+
+enum ShapeType {
+  FREEHAND
+  RECTANGLE
+  OVAL
+  TRIANGLE
+}
+
+class BackgroundLayer {
+  -image: BufferedImage
+  -opacity: float
+  -locked: boolean
+  +setImage(img: BufferedImage): void
+  +setOpacity(a: float): void
+  +lock(on: boolean): void
+}
+
+' ---------- Commands (Command pattern) ----------
+class AddShapeCommand implements Command {
+  -shape: Shape
+  +execute(model: DrawingModel): void
+  +undo(model: DrawingModel): void
+  +getName(): String
+}
+
+class EraseAtCommand implements Command {
+  -location: Point
+  -radius: int
+  -removed: List<Shape>
+  +execute(model: DrawingModel): void
+  +undo(model: DrawingModel): void
+  +getName(): String
+}
+
+class ChangeColorCommand implements Command {
+  -target: Shape
+  -prevColor: Color
+  -newColor: Color
+  +execute(model: DrawingModel): void
+  +undo(model: DrawingModel): void
+  +getName(): String
+}
+
+' ---------- Aggregate root ----------
+class DrawingModel {
+  -shapes: List<Shape>
+  -currentColor: Color
+  -strokeWidth: int
+  -currentShapeType: ShapeType
+  -eraserMode: boolean
+  -eraserRadius: int
+  -darkMode: boolean
+  -background: BackgroundLayer
+  -undoStack: Deque<Command>
+  -redoStack: Deque<Command>
+  +addShape(s: Shape): void
+  +addStrokePoint(p: Point): void
+  +eraseAt(p: Point): void
+  +clear(): void
+  +toggleDarkMode(): void
+  +execute(cmd: Command): void
+  +undo(): void
+  +redo(): void
+}
+
+' ---------- Relationships ----------
+Renderable <|.. Shape
+Shape <|-- FreehandStroke
+Shape <|-- RectangleShape
+Shape <|-- OvalShape
+Shape <|-- TriangleShape
+
+FreehandStroke "1" o-- "*" Line
+DrawingModel "1" o-- "*" Shape
+DrawingModel "1" o-- "1" BackgroundLayer
+DrawingModel --> ShapeType
+
+Command <|.. AddShapeCommand
+Command <|.. EraseAtCommand
+Command <|.. ChangeColorCommand
+DrawingModel "undo/redo" --> Command
+
+note right of Shape
+  Abstract base owned by the project.
+  Subclasses override draw(..) and hitTest(..).
+  DrawingModel stores List<Shape> and
+  calls draw(..) polymorphically.
+end note
+
+note bottom of Command
+  Custom interface used for history.
+  Each concrete command implements
+  execute(..) and undo(..).
+end note
 @enduml

@@ -17,13 +17,18 @@ public class MainFrame extends JFrame {
 
         ControlPanel controlPanel = new ControlPanel(model, drawingPanel);
         ReviewPanel reviewPanel = new ReviewPanel();
+        reviewPanel.bindCanvas(drawingPanel);     // <-- bind canvas so ReviewPanel can snapshot
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, controlPanel, drawingPanel);
-        splitPane.setResizeWeight(0);
-        // give roughly one third of the width to the control panel
-        splitPane.setDividerLocation(0.33);
+        // Top bar with Upload / Download / Dark toggle
+        TopBarPanel topBar = new TopBarPanel(model, drawingPanel);
+
+        JSplitPane splitPane =
+                new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, controlPanel, drawingPanel);
+        splitPane.setResizeWeight(0);          // keep control panel fixed
+        splitPane.setDividerLocation(0.20);    // roughly 20% controls, 80% canvas
 
         getContentPane().setLayout(new BorderLayout());
+        add(topBar, BorderLayout.NORTH);
         add(splitPane, BorderLayout.CENTER);
         add(reviewPanel, BorderLayout.SOUTH);
 

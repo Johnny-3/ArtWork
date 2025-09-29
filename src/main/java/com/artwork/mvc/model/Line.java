@@ -19,15 +19,12 @@ public class Line {
     public Point getStart() {
         return start;
     }
-
     public Point getEnd() {
         return end;
     }
-
     public Color getColor() {
         return color;
     }
-
     public int getStrokeWidth() {
         return strokeWidth;
     }

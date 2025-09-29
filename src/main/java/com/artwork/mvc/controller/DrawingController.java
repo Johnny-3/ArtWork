@@ -3,7 +3,6 @@ package com.artwork.mvc.controller;
 import com.artwork.mvc.model.DrawingModel;
 import com.artwork.mvc.model.Line;
 import com.artwork.mvc.view.DrawingPanel;
-
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
